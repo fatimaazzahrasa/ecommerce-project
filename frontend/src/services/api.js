@@ -46,34 +46,34 @@ export const registerRequest = async (userData) => {
 // ==========================================
 
 export const fetchProductsApi = async () => {
-  const response = await api.get('products/');
+  const response = await api.get('product/');
   return response.data; // كايرجع List ديال الـ Products اللي فيهم 'prix', 'categorie_name' ...
 };
 
-export const fetchCategoriesApi = async () => {
+export const fetchCategorieApi = async () => {
   const response = await api.get('categories/');
   return response.data;
 };
 
 export const fetchProductByIdApi = async (id) => {
-  const response = await api.get(`products/${id}/`);
+  const response = await api.get(`product/${id}/`);
   return response.data;
 };
 
 export const createProductApi = async (productData) => {
   // productData كتصيفط فيها: nom, description, prix, stock, categorie, artisan
   // رد البال: إيلا كانت فيها صورة، خاص نخدمو بـ FormData ف الـ component (غانقادوها ف بلاصتها)
-  const response = await api.post('products/', productData);
+  const response = await api.post('product/', productData);
   return response.data;
 };
 
 export const updateProductApi = async (id, productData) => {
-  const response = await api.put(`products/${id}/`, productData);
+  const response = await api.put(`product/${id}/`, productData);
   return response.data;
 };
 
 export const deleteProductApi = async (id) => {
-  await api.delete(`products/${id}/`);
+  await api.delete(`product/${id}/`);
   return true;
 };
 

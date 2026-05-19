@@ -14,13 +14,14 @@ class Produit(models.Model):
     artisan = models.ForeignKey(
         Artisan,
         on_delete=models.CASCADE,
-        related_name='produits'  # Renvoyé les produits par l'artisan
+        related_name='produit'  # Renvoyé les produits par l'artisan
     )
     
+    # 🚨 هنا كان الغلط رجعناها 'categorie' بالمفرد باش طابق الكلاس الفوق
     categorie = models.ForeignKey(
         Categorie,
         on_delete=models.CASCADE,
-        related_name='produits'
+        related_name='produit'
     )
     
     nom = models.CharField(max_length=255)
@@ -36,7 +37,7 @@ class Produit(models.Model):
     
     # ici nous utilisons le système de médias de Django: les fichiers seront stockés dans le répertoire media/produits/
     image = models.ImageField(
-        upload_to='produits/',
+        upload_to='produit/',
         blank=True,
         null=True
     )
