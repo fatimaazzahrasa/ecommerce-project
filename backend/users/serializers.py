@@ -3,24 +3,46 @@ from rest_framework_simplejwt.serializers import TokenObtainPairSerializer
 from django.contrib.auth import get_user_model
 from .models import Artisan
 
-
-
 User = get_user_model()
 
+
 class UserSerializer(serializers.ModelSerializer):
+
+    nom_boutique = serializers.CharField(
+        write_only=True,
+        required=False
+    )
+
     class Meta:
         model = User
-        fields = ['id', 'username', 'email', 'first_name', 'last_name', 'role', 'password']
+
+        fields = [
+            'id',
+            'username',
+            'email',
+            'first_name',
+            'last_name',
+            'role',
+            'password',
+            'nom_boutique'
+        ]
+
         extra_kwargs = {
-            'password': {'write_only': True}  # le mot de passe est seulement écrit, pas lu
+            'password': {
+                'write_only': True
+            }
         }
 
-    # la méthode create est appelée quand on fait serializer.save() dans la view de Register
     def create(self, validated_data):
 
-        allowed_roles = ['client', 'artisan']
+        nom_boutique = validated_data.pop('nom_boutique', None)
 
-        role = validated_data.get('role', 'client')
+        role = validated_data.get(
+            'role',
+            'CLIENT'
+        ).upper()
+
+        allowed_roles = ['CLIENT', 'ARTISAN', 'ADMIN']
 
         if role not in allowed_roles:
             raise serializers.ValidationError({
@@ -35,6 +57,16 @@ class UserSerializer(serializers.ModelSerializer):
             role=role,
             password=validated_data['password']
         )
+
+        if role == 'ARTISAN':
+
+            if not nom_boutique:
+                nom_boutique = f'Boutique de {user.username}'
+
+            Artisan.objects.create(
+                user=user,
+                nom_boutique=nom_boutique
+            )
 
         return user
 
@@ -55,4 +87,4 @@ class ArtisanSerializer(serializers.ModelSerializer):
 
     class Meta:
         model = Artisan
-        fields = ['id', 'user', 'user_details', 'nom_boutique', 'description', 'adresse', 'telephone']
+        fields = ['id', 'user', 'user_details', 'nom_boutique', 'status']

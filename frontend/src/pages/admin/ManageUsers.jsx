@@ -14,8 +14,10 @@ import { cn } from '../../lib/utils';
 // 🔌 استيراد دوال الـ API المحدثة
 import { fetchUsersApi } from '../../services/api'; 
 import axios from 'axios';
+import { useNavigate } from 'react-router-dom';
 
 const ManageUsers = () => {
+  const navigate = useNavigate();
   const [utilisateurs, setUtilisateurs] = useState([]);
   const [isLoading, setIsLoading] = useState(true);
   const [searchQuery, setSearchQuery] = useState('');
@@ -123,7 +125,55 @@ const ManageUsers = () => {
           <UserPlus className="w-5 h-5" />
           Inviter un Utilisateur
         </button>
-      </section>
+      </section><button 
+          onClick={handleInviteUser}
+          className="w-full xl:w-auto bg-primary text-white px-10 py-4 rounded-2xl font-manrope font-black text-xs uppercase tracking-widest flex items-center justify-center gap-3 shadow-2xl shadow-primary/20 hover:scale-105 active:scale-95 transition-all cursor-pointer"
+        >
+          <UserPlus className="w-5 h-5" />
+          Inviter un Utilisateur
+        </button><button 
+          onClick={handleInviteUser}
+          className="w-full xl:w-auto bg-primary text-white px-10 py-4 rounded-2xl font-manrope font-black text-xs uppercase tracking-widest flex items-center justify-center gap-3 shadow-2xl shadow-primary/20 hover:scale-105 active:scale-95 transition-all cursor-pointer"
+        >
+          <UserPlus className="w-5 h-5" />
+          Inviter un Utilisateur
+        </button><button 
+          onClick={handleInviteUser}
+          className="w-full xl:w-auto bg-primary text-white px-10 py-4 rounded-2xl font-manrope font-black text-xs uppercase tracking-widest flex items-center justify-center gap-3 shadow-2xl shadow-primary/20 hover:scale-105 active:scale-95 transition-all cursor-pointer"
+        >
+          <UserPlus className="w-5 h-5" />
+          Inviter un Utilisateur
+        </button><button 
+          onClick={handleInviteUser}
+          className="w-full xl:w-auto bg-primary text-white px-10 py-4 rounded-2xl font-manrope font-black text-xs uppercase tracking-widest flex items-center justify-center gap-3 shadow-2xl shadow-primary/20 hover:scale-105 active:scale-95 transition-all cursor-pointer"
+        >
+          <UserPlus className="w-5 h-5" />
+          Inviter un Utilisateur
+        </button><button 
+          onClick={handleInviteUser}
+          className="w-full xl:w-auto bg-primary text-white px-10 py-4 rounded-2xl font-manrope font-black text-xs uppercase tracking-widest flex items-center justify-center gap-3 shadow-2xl shadow-primary/20 hover:scale-105 active:scale-95 transition-all cursor-pointer"
+        >
+          <UserPlus className="w-5 h-5" />
+          Inviter un Utilisateur
+        </button><button 
+          onClick={handleInviteUser}
+          className="w-full xl:w-auto bg-primary text-white px-10 py-4 rounded-2xl font-manrope font-black text-xs uppercase tracking-widest flex items-center justify-center gap-3 shadow-2xl shadow-primary/20 hover:scale-105 active:scale-95 transition-all cursor-pointer"
+        >
+          <UserPlus className="w-5 h-5" />
+          Inviter un Utilisateur
+        </button><button 
+          onClick={handleInviteUser}
+          className="w-full xl:w-auto bg-primary text-white px-10 py-4 rounded-2xl font-manrope font-black text-xs uppercase tracking-widest flex items-center justify-center gap-3 shadow-2xl shadow-primary/20 hover:scale-105 active:scale-95 transition-all cursor-pointer"
+        >
+          <UserPlus className="w-5 h-5" />
+          Inviter un Utilisateur
+        </button><button 
+          onClick={() => navigate('/admin/users/create')}
+          className="w-full xl:w-auto bg-primary text-white px-10 py-4 rounded-2xl font-manrope font-black text-xs uppercase tracking-widest flex items-center justify-center gap-3 shadow-2xl shadow-primary/20 hover:scale-105 active:scale-95 transition-all cursor-pointer"
+        >
+          <UserPlus className="w-5 h-5" />
+          Inviter un Utilisateur
+        </button>
 
       {/* Conteneur de Table */}
       <div className="bg-white rounded-[2.5rem] border border-outline-variant shadow-2xl shadow-surface-container/20 overflow-hidden text-on-surface">

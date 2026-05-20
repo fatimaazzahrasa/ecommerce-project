@@ -1,24 +1,17 @@
 import axios from 'axios';
 
-// 🌐 الرابط الرئيسي ديال Django Backend (بدلو إيلا كان عندك port آخر)
 const API_BASE_URL = 'http://127.0.0.1:8000/api/'; 
 
-const api = axios.create({
+// هنا كنصدرو الـ instance باش نقدروا نستعملوه بـ الأقواس
+export const api = axios.create({
   baseURL: API_BASE_URL,
-  headers: {
-    'Content-Type': 'application/json',
-  },
+  headers: { 'Content-Type': 'application/json' },
 });
 
-// 🔒 دالة سحرية باش تلصق الـ Token د الـ Login (JWT) ف كاع الـ Requests اللي جايين
 api.interceptors.request.use((config) => {
   const token = localStorage.getItem('token');
-  if (token) {
-    config.headers.Authorization = `Bearer ${token}`;
-  }
+  if (token) config.headers.Authorization = `Bearer ${token}`;
   return config;
-}, (error) => {
-  return Promise.reject(error);
 });
 
 // ==========================================
@@ -26,18 +19,19 @@ api.interceptors.request.use((config) => {
 // ==========================================
 
 export const loginRequest = async (username, password) => {
-  // Django غالباً كيحتاج username و password ف الـ JWT Token
-  const response = await api.post('token/', { username, password });
+
+  const response = await api.post('users/login/', { username, password });
   // response.data غاتكون فيها الـ access token والـ refresh token والـ user info
   if (response.data.access) {
     localStorage.setItem('token', response.data.access);
+    localStorage.setItem('refresh_token', response.data.refresh);
   }
   return response.data;
 };
 
 export const registerRequest = async (userData) => {
   // userData غاتمشي على حساب الـ UserSerializer (username, email, password, role...)
-  const response = await api.post('users/register/', userData);
+    const response = await api.post('users/register/', userData);
   return response.data;
 };
 
