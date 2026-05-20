@@ -12,66 +12,67 @@ import {
 } from 'lucide-react';
 import { useAuth } from '../context/AuthContext';
 import { cn } from '../lib/utils';
-// 🚀 تصحيح الـ Import ديال Motion
 import { motion } from 'framer-motion';
 
 const Register = () => {
   const navigate = useNavigate();
-  const { isLoading } = useAuth(); // تقدر تستعملو إيلا زدتي Loading لاحقاً
+  // 🎯 عيطنا على دالة register والـ isLoading من الـ Context
+  const { register, isLoading } = useAuth(); 
   
   const [formData, setFormData] = useState({
     name: '',
     email: '',
     password: '',
     confirmPassword: '',
-    role: 'client' // الافتراضي هو كليان (Acheteur)
+    role: 'client', // الافتراضي
+    nom_boutique: '' // 🎯 الحقل الجديد الخاص بالصانع
   });
   const [error, setError] = useState('');
 
-  const handleSubmit = (e) => {
+  const handleSubmit = async (e) => {
     e.preventDefault();
     setError('');
 
-    // 🔍 التحقق من ملء الحقول الأساسية
     if (!formData.name || !formData.email || !formData.password) {
       setError('Veuillez remplir tous les champs.');
       return;
     }
 
-    // 🔍 التحقق من تطابق كلمات المرور من كود الـ AI
     if (formData.password !== formData.confirmPassword) {
       setError('Les mots de passe ne correspondent pas');
       return;
     }
 
+    // 🔍 إذا كان artisan وضيروري يعمر سمية البوتيك
+    if (formData.role === 'artisan' && !formData.nom_boutique) {
+      setError('Veuillez renseigner le nom de votre boutique.');
+      return;
+    }
+
     try {
-      // 🔄 جلب الحسابات لّي ديجا مسجلين ف الـ LocalStorage من كودك القديم
-      const existingUsers = JSON.parse(localStorage.getItem('registeredUsers')) || [];
-
-      // نتحققوا واش هاد الإيميل ديجا مستعمل
-      const userExists = existingUsers.find(u => u.email === formData.email);
-      if (userExists) {
-        setError('Cet émail est déjà utilisé.');
-        return;
-      }
-
-      // نكريو المستخدم الجديد بالهيكلة الصحيحة للبروجي
-      const newUser = { 
-        id: Date.now(),
-        name: formData.name, 
-        email: formData.email, 
-        password: formData.password, 
-        role: formData.role 
+      // 🎯 تجهيز البيانات متطابقة 100% مع UserSerializer ديال Django
+      const djangoUserData = {
+        username: formData.email, // صيفطنا الإيميل كـ username
+        email: formData.email,
+        password: formData.password,
+        role: formData.role.toUpperCase(), // 'CLIENT' أو 'ARTISAN'
+        // إذا كان artisan يصيفط سمية البوتيك، يلا كان كليان يصيفطها خاوية
+        nom_boutique: formData.role === 'artisan' ? formData.nom_boutique : ''
       };
-      
-      // نزيدوه على القائمة ونسيفيو ف الـ localStorage
-      existingUsers.push(newUser);
-      localStorage.setItem('registeredUsers', JSON.stringify(existingUsers));
 
-      // توجيه لصفحة الـ Login بنجاح
+      // 🎯 إرسال الطلب الحقيقي للباكاند
+      await register(djangoUserData);
+
+      // التوجيه التلقائي لصفحة الـ Login مورا ما يتسجل بنجاح
       navigate('/login');
     } catch (err) {
-      setError('L\'inscription a échoué. Veuillez réessayer.');
+      // 🎯 عرض الأخطاء الحقيقية لّي جاية من Django (مثال: الـ Email ديجا كاين)
+      if (typeof err === 'object') {
+        const errorMsg = Object.values(err)[0];
+        setError(Array.isArray(errorMsg) ? errorMsg[0] : 'L\'inscription a échoué.');
+      } else {
+        setError(err || 'L\'inscription a échoué. Veuillez réessayer.');
+      }
     }
   };
 
@@ -104,7 +105,7 @@ const Register = () => {
 
         <form className="mt-8 space-y-6" onSubmit={handleSubmit}>
           
-          {/* 👥 اختيار نوع الحساب بستايل الـ AI الإحترافي */}
+          {/* 👥 اختيار نوع الحساب */}
           <div className="col-span-full">
             <label className="block text-[11px] font-bold text-[#424751] uppercase tracking-[0.2em] mb-3 px-1">Je m'inscris en tant que</label>
             <div className="grid grid-cols-2 gap-4">
@@ -168,6 +169,28 @@ const Register = () => {
               </div>
             </div>
 
+            {/* 🎯 اللقطة السحرية: خانة سمية البوتيك كـتبان غي إلا عزل Artisan */}
+            {formData.role === 'artisan' && (
+              <motion.div 
+                initial={{ opacity: 0, height: 0 }}
+                animate={{ opacity: 1, height: 'auto' }}
+                className="col-span-full"
+              >
+                <label className="block text-[11px] font-bold text-[#424751] uppercase tracking-[0.2em] mb-2 px-1">Nom de la Boutique</label>
+                <div className="relative">
+                  <Store className="absolute left-4 top-1/2 -translate-y-1/2 w-5 h-5 text-[#c2c6d3]" />
+                  <input
+                    required
+                    type="text"
+                    className="w-full bg-[#f9f9f7] border border-[#c2c6d3] rounded-xl pl-12 pr-4 py-3.5 text-sm focus:outline-none focus:border-[#003974] transition-colors"
+                    placeholder="Zellige Fassi S.A.R.L"
+                    value={formData.nom_boutique}
+                    onChange={(e) => setFormData({...formData, nom_boutique: e.target.value})}
+                  />
+                </div>
+              </motion.div>
+            )}
+
             <div>
               <label className="block text-[11px] font-bold text-[#424751] uppercase tracking-[0.2em] mb-2 px-1">Mot de Passe</label>
               <div className="relative">
@@ -214,10 +237,17 @@ const Register = () => {
 
           <button
             type="submit"
+            disabled={isLoading}
             className="w-full bg-[#003974] text-white py-4 rounded-xl text-xs font-bold uppercase tracking-widest flex items-center justify-center gap-2 hover:opacity-90 transition-all cursor-pointer shadow-lg shadow-[#003974]/10 group"
           >
-            Créer mon compte
-            <ArrowRight className="w-4 h-4 group-hover:translate-x-1 transition-transform" />
+            {isLoading ? (
+              <div className="w-5 h-5 border-2 border-white/30 border-t-white rounded-full animate-spin" />
+            ) : (
+              <>
+                Créer mon compte
+                <ArrowRight className="w-4 h-4 group-hover:translate-x-1 transition-transform" />
+              </>
+            )}
           </button>
         </form>
 

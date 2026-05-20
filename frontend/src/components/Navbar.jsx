@@ -101,7 +101,11 @@ const Navbar = () => {
             {isAuthenticated ? (
               <div className="flex items-center gap-4">
                 <RouterLink 
-                  to={user?.role === 'artisan' ? '/artisan/dashboard' : '/client/orders'}
+                  to={user?.role?.toUpperCase() === 'ADMIN' ? '/admin/dashboard' 
+                      : user?.role?.toUpperCase() === 'ARTISAN' 
+                      ? '/artisan/dashboard' 
+                      : '/client/orders'
+                  }
                   className="flex items-center gap-3 p-1.5 pr-5 bg-primary/5 rounded-full border border-primary/20 hover:bg-primary hover:text-on-primary transition-all group"
                 >
                   <div className="w-9 h-9 rounded-full bg-primary flex items-center justify-center text-on-primary font-black text-sm group-hover:bg-on-primary group-hover:text-primary transition-colors">

@@ -2,9 +2,7 @@ import React, { useState } from 'react';
 import { useNavigate, Link } from 'react-router-dom';
 import { useAuth } from '../context/AuthContext';
 import { Mail, Lock, Store, Eye, EyeOff, ArrowRight } from 'lucide-react';
-// 🚀 تصحيح الـ Import ديال Motion
 import { motion } from 'framer-motion';
-import { cn } from '../lib/utils';
 
 const Login = () => {
   const [email, setEmail] = useState('');
@@ -12,6 +10,7 @@ const Login = () => {
   const [showPassword, setShowPassword] = useState(false);
   const [error, setError] = useState('');
   
+  // 🎯 عيطنا على الـ login والـ isLoading الحقيقيين من الـ Context ديالنا
   const { login, isLoading } = useAuth();
   const navigate = useNavigate();
 
@@ -25,37 +24,27 @@ const Login = () => {
     }
 
     try {
-      // 🔍 جلب المستخدمين المسجلين في الـ LocalStorage بحال كودك القديم
-      const existingUsers = JSON.parse(localStorage.getItem('registeredUsers')) || [];
+      // 🎯 عيطنا على دالة الـ login الحقيقية. صيفطنا الـ email كـ username لـ دجانغو
+      const userData = await login(email, password);
 
-      // البحث عن المستخدم والمطابقة
-      const userFound = existingUsers.find(u => u.email === email && u.password === password);
+      // 🔀 التوجيه الذكي المبني على الـ Role الحقيقي لّي جاي من قاعدة البيانات (Django)
+      const userRole = userData.role?.toUpperCase(); // باش نتفاداو مشاكل الحروف الكبيرة/الصغيرة
 
-      if (!userFound) {
-        setError('Émail ou mot de passe incorrect. Veuillez d\'abord vous inscrire.');
-        return;
-      }
-
-      // 🔐 تمرير التوكن والبيانات للـ AuthContext ديالك
-      const fakeToken = "abc123xyz_token_real_auth";
-      await login(fakeToken, {
-        id: userFound.id,
-        name: userFound.name,
-        email: userFound.email,
-        role: userFound.role
-      });
-
-      // 🔀 التوجيه الذكي على حساب الـ Role
-      if (userFound.role === 'artisan') {
+      if (userRole === 'ARTISAN') {
         navigate('/artisan/dashboard', { replace: true });
-      } else if (userFound.role === 'admin') {
+      } else if (userRole === 'ADMIN') {
         navigate('/admin/dashboard', { replace: true });
       } else {
-        navigate('/', { replace: true });
+        navigate('/', { replace: true }); // الكليان كيمشي للصفحة الرئيسية
       }
 
     } catch (err) {
-      setError(err.message || 'L\'authentification a échoué.');
+      // 🎯 عرض الأخطاء الحقيقية لّي جاية من Django (مثال: Mot de passe incorrect)
+      if (typeof err === 'object') {
+        setError(err.detail || 'Identifiants invalides.');
+      } else {
+        setError(err || "L'authentification a échoué.");
+      }
     }
   };
 
@@ -99,7 +88,7 @@ const Login = () => {
                 <input
                   id="email-address"
                   name="email"
-                  type="email"
+                  type="text"
                   autoComplete="email"
                   required
                   value={email}

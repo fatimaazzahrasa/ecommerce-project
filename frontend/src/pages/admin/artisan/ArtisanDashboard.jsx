@@ -17,7 +17,7 @@ import {
 import { motion } from 'framer-motion';
 import { fetchProductsApi, fetchOrdersApi } from '../../services/api';
 
-const MotionLink = motion(Link);
+const MotionLink = motion.create(Link);
 
 const ArtisanDashboard = () => {
   const { user } = useAuth();
