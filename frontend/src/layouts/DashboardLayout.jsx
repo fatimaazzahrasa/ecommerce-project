@@ -135,14 +135,8 @@ const DashboardLayout = () => {
             
             <div className="h-6 w-[1px] bg-outline-variant hidden sm:block"></div>
             
-            {/* زر رؤية المتجر كيبان عند الحرفي والأدمن للرجوع للرئيسية */}
-            <Link 
-              to="/" 
-              className="hidden sm:flex items-center gap-2 px-4 py-1.5 bg-surface-container-high rounded-full text-xs font-bold text-primary hover:bg-primary hover:text-on-primary transition-all border border-outline-variant"
-            >
-              <Home className="w-3.5 h-3.5" />
-              Voir la Boutique
-            </Link>
+           
+            
 
             <div className="w-8 h-8 rounded-full border border-outline-variant bg-surface-container-highest flex items-center justify-center font-bold text-xs text-primary">
               {displayName.charAt(0).toUpperCase()}

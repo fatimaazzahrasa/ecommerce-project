@@ -4,6 +4,12 @@
 @theme {
   --font-sans: "Inter", ui-sans-serif, system-ui, sans-serif;
   --font-serif: "Playfair Display", ui-serif, Georgia, serif;
+  
+  /* 🎯 زدت هادو هنا باش الـ Layout يقرا الخطوط بأسماء الكلاسات اللي ف الـ HTML */
+  --font-display-lg: "Playfair Display", serif;
+  --font-title-md: "Playfair Display", serif;
+  --font-label-md: "Inter", sans-serif;
+  --font-label-sm: "Inter", sans-serif;
 
   --color-background: #f9f9f7;
   --color-on-background: #1a1c1b;
@@ -44,6 +50,13 @@
   --color-outline: #727782;
   --color-outline-variant: #c2c6d3;
 
+  /* 🎯 زدت الـ Spacing والـ Gutter باش تظبط المسافات بحال الـ HTML */
+  --spacing-gutter: 16px;
+  --spacing-stack-md: 12px;
+  --spacing-stack-lg: 24px;
+  --spacing-container-margin-desktop: 40px;
+  --spacing-container-margin-mobile: 16px;
+  
   --spacing-margin-desktop: 64px;
   --spacing-margin-mobile: 20px;
   --spacing-container-max: 1280px;

@@ -10,7 +10,8 @@ class UserSerializer(serializers.ModelSerializer):
 
     nom_boutique = serializers.CharField(
         write_only=True,
-        required=False
+        required=False,
+        allow_blank=True, allow_null=True
     )
 
     class Meta:
