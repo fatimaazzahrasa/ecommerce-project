@@ -39,7 +39,7 @@ class LigneCommandeSerializer(serializers.ModelSerializer):
     class Meta:
         model = LigneCommande
         fields = ['id', 'commande', 'produit', 'produit_details', 'quantite', 'prix_unitaire']
-
+        extra_kwargs = {'prix_unitaire': {'read_only': True}}
 
 class CommandeSerializer(serializers.ModelSerializer):
     lignes = LigneCommandeSerializer(many=True, read_only=True, source='lignes')
@@ -47,3 +47,4 @@ class CommandeSerializer(serializers.ModelSerializer):
     class Meta:
         model = Commande
         fields = ['id', 'user', 'lignes', 'prix_total', 'statut', 'date_creation']
+        read_only_fields = ['user', 'prix_total', 'statut', 'date_creation']
