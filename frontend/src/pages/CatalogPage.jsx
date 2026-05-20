@@ -21,6 +21,9 @@ const CatalogPage = () => {
       .then(([prodData, catData]) => {
         setProduits(Array.isArray(prodData) ? prodData : []);
         setCategories(Array.isArray(catData) ? catData : []);
+
+        console.log("Les produits reçus de Django:", prodData);
+        
         setLoading(false);
       })
       .catch((error) => {

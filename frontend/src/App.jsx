@@ -27,11 +27,11 @@ import AdminDashboard from './pages/admin/AdminDashboard';
 import ManageUsers from './pages/admin/ManageUsers';
 import CreateUser from './pages/admin/CreateUser';
 
-// 🔨 Artisan Pages
-import ArtisanDashboard from './pages/artisan/ArtisanDashboard';
-import ArtisanProducts from './pages/artisan/ArtisanProducts';
-import ArtisanOrders from './pages/artisan/ArtisanOrders';
-import CreateProduct from './pages/artisan/CreateProduct';
+// 🔨 مكونات مؤقتة للحرفي (Artisan) عوض الـ imports اللي فيهم مشكل
+const ArtisanDashboard = () => <div className="p-10 font-bold bg-surface-container rounded-3xl border border-outline-variant/30 text-on-surface">Dashboard Artisan (En cours)</div>;
+const ArtisanProducts = () => <div className="p-10 font-bold bg-surface-container rounded-3xl border border-outline-variant/30 text-on-surface">Gestion des Produits</div>;
+const ArtisanOrders = () => <div className="p-10 font-bold bg-surface-container rounded-3xl border border-outline-variant/30 text-on-surface">Commandes Artisan</div>;
+const CreateProduct = () => <div className="p-10 font-bold bg-surface-container rounded-3xl border border-outline-variant/30 text-on-surface">Formulaire Ajouter Produit</div>;
 
 // 🔐 الـ Guard لّي كيحمي المسارات على حساب الـ Role
 const ProtectedRoute = ({ children, role }) => {
@@ -49,7 +49,6 @@ const ProtectedRoute = ({ children, role }) => {
   const userRole = user?.role?.toUpperCase();
   const requiredRole = role?.toUpperCase();
 
-  // إذا كان المستخدم ماشي أدمن وماشي هو الـ Role المطلوب، كنصيفطوه لبلايصتو
   if (userRole !== 'ADMIN' && userRole !== requiredRole) {
     if (userRole === 'ARTISAN') return <Navigate to="/artisan/dashboard" replace />;
     return <Navigate to="/" replace />;
@@ -65,16 +64,13 @@ const App = () => {
         <BrowserRouter>
           <Routes>
             
-            {/* =========================================================
-                1️⃣ الـ المسارات العامة والـ Clients (MainLayout)
-               ========================================================= */}
+            {/* 1️⃣ الـ المسارات العامة والـ Clients */}
             <Route element={<MainLayout />}>
               <Route path="/" element={<Home />} />
               <Route path="/catalog" element={<CatalogPage />} />
               <Route path="/products/:id" element={<ProductDetail />} />
               <Route path="/panier" element={<Panier />} />
               
-              {/* مسارات محمية خاصة بالـ Client العادي */}
               <Route path="/orders" element={<ProtectedRoute role="client"><OrdersPage /></ProtectedRoute>} />
               <Route 
                 path="/checkout" 
@@ -88,15 +84,11 @@ const App = () => {
               />
             </Route>
 
-            {/* =========================================================
-                2️⃣ صفحات الدخول والتسجيل (بدون أي Layout)
-               ========================================================= */}
+            {/* 2️⃣ صفحات الدخول والتسجيل */}
             <Route path="/login" element={<Login />} />
             <Route path="/Register" element={<Register />} />
 
-            {/* =========================================================
-                3️⃣ لوحة تحكم الـ Artisan (DashboardLayout المحمي)
-               ========================================================= */}
+            {/* 3️⃣ لوحة تحكم الـ Artisan */}
             <Route 
               element={
                 <ProtectedRoute role="artisan">
@@ -111,9 +103,7 @@ const App = () => {
               <Route path="/artisan/settings" element={<div className="p-10 font-bold bg-surface-container rounded-3xl border border-outline-variant/30 text-on-surface">Paramètres de l'Atelier</div>} />
             </Route>
 
-            {/* =========================================================
-                4️⃣ لوحة تحكم الـ Admin (نفس الـ DashboardLayout المحمي للأدمن)
-               ========================================================= */}
+            {/* 4️⃣ لوحة تحكم الـ Admin */}
             <Route 
               element={
                 <ProtectedRoute role="admin">
@@ -130,9 +120,7 @@ const App = () => {
               <Route path="/admin/settings" element={<div className="p-10 font-bold bg-surface-container rounded-3xl border border-outline-variant/30 text-on-surface">Paramètres Généraux</div>} />
             </Route>
 
-            {/* =========================================================
-                5️⃣ الـ Redirection ف حالة خطأ ف الـ Path
-               ========================================================= */}
+            {/* 5️⃣ الـ Redirection */}
             <Route path="*" element={<Navigate to="/" replace />} />
           </Routes>
         </BrowserRouter>

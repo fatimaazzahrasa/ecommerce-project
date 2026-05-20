@@ -19,9 +19,7 @@ api.interceptors.request.use((config) => {
 // ==========================================
 
 export const loginRequest = async (username, password) => {
-
   const response = await api.post('users/login/', { username, password });
-  // response.data غاتكون فيها الـ access token والـ refresh token والـ user info
   if (response.data.access) {
     localStorage.setItem('token', response.data.access);
     localStorage.setItem('refresh_token', response.data.refresh);
@@ -30,74 +28,75 @@ export const loginRequest = async (username, password) => {
 };
 
 export const registerRequest = async (userData) => {
-  // userData غاتمشي على حساب الـ UserSerializer (username, email, password, role...)
-    const response = await api.post('users/register/', userData);
+  const response = await api.post('users/register/', userData);
   return response.data;
 };
 
 // ==========================================
-// 📦 Products API (على حساب ProduitSerializer)
+// 📦 Products API (على حساب الـ ViewSet د ديانغو)
 // ==========================================
 
 export const fetchProductsApi = async () => {
-  const response = await api.get('product/');
-  return response.data; // كايرجع List ديال الـ Products اللي فيهم 'prix', 'categorie_name' ...
+  // 🚨 تصحيح: رجعناها products/ باش تطابق الباكند
+  const response = await api.get('products/');
+  return response.data; 
 };
 
-export const fetchCategorieApi = async () => {
+// 🚨 تصحيح: رجعنا سميتها fetchCategoriesApi (بالـ s) باش يقراها الكتالوج ديريكت
+export const fetchCategoriesApi = async () => {
   const response = await api.get('categories/');
   return response.data;
 };
 
 export const fetchProductByIdApi = async (id) => {
-  const response = await api.get(`product/${id}/`);
+  // 🚨 تصحيح: رجعناها products/
+  const response = await api.get(`products/${id}/`);
   return response.data;
 };
 
 export const createProductApi = async (productData) => {
-  // productData كتصيفط فيها: nom, description, prix, stock, categorie, artisan
-  // رد البال: إيلا كانت فيها صورة، خاص نخدمو بـ FormData ف الـ component (غانقادوها ف بلاصتها)
-  const response = await api.post('product/', productData);
+  // 🚨 تصحيح: رجعناها products/
+  // ملاحظة: إيلا كانت فيها صورة، خاص نصيفطو الـ FormData ديريكت ف الـ Component
+  const response = await api.post('products/', productData);
   return response.data;
 };
 
 export const updateProductApi = async (id, productData) => {
-  const response = await api.put(`product/${id}/`, productData);
+  // 🚨 تصحيح: رجعناها products/
+  const response = await api.put(`products/${id}/`, productData);
   return response.data;
 };
 
 export const deleteProductApi = async (id) => {
-  await api.delete(`product/${id}/`);
+  // 🚨 تصحيح: رجعناها products/
+  await api.delete(`products/${id}/`);
   return true;
 };
 
 // ==========================================
-// 🛒 Orders & Cart API (على حساب Commande & Panier Serializers)
+// 🛒 Orders & Cart API
 // ==========================================
 
 export const fetchOrdersApi = async () => {
-  // الـ Backend كيعرف الـ User من الـ Token، غايرجع الـ Orders د الصانع أو د الكليان على حساب شكون مـكونكطي
   const response = await api.get('orders/');
-  return response.data; // كيرجع البيانات مقادة فيها الـ lignes و الـ prix_total و الـ statut
+  return response.data;
 };
 
 export const createOrderApi = async (orderData) => {
-  // orderData غاتمشي لـ Django باش تـكريي Commande حقيقية مورا ما يخلص بـ Stripe
   const response = await api.post('orders/', orderData);
   return response.data;
 };
 
 // ==========================================
-// 💳 Stripe Payment API (على حساب PaiementSerializer)
+// 💳 Stripe Payment API
 // ==========================================
 
 export const createPaymentIntentApi = async (commandeId, montant) => {
-  // هادي غاتـعيط على الـ View د Django اللي كادير الـ Connection مع Stripe SDK
   const response = await api.post('payments/create-intent/', {
     commande: commandeId,
     montant: montant
   });
-  return response.data; // غاترجع ليك الـ clientSecret اللي كيحتاجو الفرونتند باش يـشعل الفورم د Stripe
+  return response.data;
 };
 
 // ==========================================
